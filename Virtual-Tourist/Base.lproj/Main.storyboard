@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--World Map-->
@@ -32,15 +33,31 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="World Map" id="nco-tt-6HG">
                         <barButtonItem key="backBarButtonItem" title="Back" id="b5R-9H-bOP"/>
-                        <barButtonItem key="leftBarButtonItem" systemItem="add" id="yaF-Ic-qxR">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="4Tc-ej-kWx">
                             <connections>
-                                <segue destination="3kJ-1O-YP0" kind="show" identifier="MapViewToPhotoAlbumVCSegueID" id="9pA-UA-54I"/>
+                                <action selector="doneButtonPressed:" destination="BYZ-38-t0r" id="XgM-YP-ZBa"/>
                             </connections>
                         </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="edit" id="9eS-TB-jCb">
+                                <connections>
+                                    <action selector="editButtonPressed:" destination="BYZ-38-t0r" id="Xmb-wK-hhK"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="trash" id="oGT-DM-ooc">
+                                <connections>
+                                    <action selector="deleteButtonPressed:" destination="BYZ-38-t0r" id="an4-Ju-tk9"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="TLVCMapViewer" destination="yyZ-Yi-jDG" id="dwK-o2-LO7"/>
+                        <outlet property="deleteBarButtonItemOutlet" destination="oGT-DM-ooc" id="UYi-dW-6Dg"/>
+                        <outlet property="doneBarButtonItemOutlet" destination="4Tc-ej-kWx" id="lzF-Uc-wdA"/>
+                        <outlet property="editBarButtonItemOutlet" destination="9eS-TB-jCb" id="UnS-8s-URw"/>
+                        <segue destination="3kJ-1O-YP0" kind="show" identifier="MapViewToPhotoAlbumVCSegueID" id="7S1-9X-bwo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

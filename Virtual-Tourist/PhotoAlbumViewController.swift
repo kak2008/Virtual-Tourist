@@ -28,7 +28,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
        
         collectionView.dataSource = self
         collectionView.delegate = self
-
+        
+        getPhotosCalling()
+ 
     }
     
     override func viewWillLayoutSubviews() {
@@ -59,6 +61,24 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     
+    func getPhotosCalling()
+    {
+        
+        let urlCalling = ApiClient()
+        urlCalling.getPhotos({ (errorMessage) in
+            // error handling
+            
+            print(errorMessage)
+            
+            }) { 
+                // success case
+                
+               self.collectionView.reloadData()
+        }
+        
+    }
+    
+    
     //  MARK:- Collection view cell methods
     
 
@@ -69,13 +89,39 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     
     // Number of Items in section in collection view
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        let userPhotosObj = UsersPhotosInfo.userPhotosSharedInstance
+        if userPhotosObj.userPhotoDetailsArray == nil
+        {
+            return 0
+        }
+        return userPhotosObj.userPhotoDetailsArray.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath)
         cell.backgroundColor = UIColor .whiteColor()
-      
+        
+        let userPhotosObj = UsersPhotosInfo.userPhotosSharedInstance
+        let photoDictionary = (userPhotosObj.userPhotoDetailsArray[indexPath.row])
+        
+        let farmID = photoDictionary["farm"] as! NSNumber
+        let serverID = photoDictionary["server"] as! String
+        let id = photoDictionary["id"] as! String
+        let secret = photoDictionary["secret"] as! String
+        
+        let apiClientObj = ApiClient()
+        apiClientObj.getActualPhotoData("\(farmID)", serverID: serverID, id: "\(id)", secret: secret) { (imageData) in
+            // if result is nil
+            if imageData != ""
+            {
+                let imageView  = cell.viewWithTag(10) as! UIImageView
+               dispatch_async(dispatch_get_main_queue(), { 
+                imageView.image = UIImage(data: imageData)
+               })
+            }
+            
+        }
+
         let imageView = cell.viewWithTag(10) as! UIImageView
         imageView.image = UIImage(named: "No-Image-Basic.png")
         
