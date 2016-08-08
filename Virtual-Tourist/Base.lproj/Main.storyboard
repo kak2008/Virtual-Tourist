@@ -84,7 +84,11 @@
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="hKs-be-LEO"/>
-                                    <barButtonItem title="New Collection" id="soS-im-dFD"/>
+                                    <barButtonItem title="New Collection" id="soS-im-dFD">
+                                        <connections>
+                                            <action selector="newCollectionButtonPressed:" destination="3kJ-1O-YP0" id="bCJ-2S-tr1"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="vqJ-tV-Cm0"/>
                                 </items>
                             </toolbar>
@@ -97,7 +101,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="fBF-gV-b99">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="fBF-gV-b99" customClass="CollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -121,6 +125,9 @@
                                             <constraint firstItem="YGc-cn-wqp" firstAttribute="centerX" secondItem="fBF-gV-b99" secondAttribute="centerX" id="eVq-MT-NQh"/>
                                             <constraint firstItem="YGc-cn-wqp" firstAttribute="centerY" secondItem="fBF-gV-b99" secondAttribute="centerY" id="npt-za-1fh"/>
                                         </constraints>
+                                        <connections>
+                                            <outlet property="activityIndicator" destination="YGc-cn-wqp" id="SPs-NJ-mfh"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -143,6 +150,7 @@
                     <connections>
                         <outlet property="PAVCMapViewer" destination="C8X-an-MYO" id="meh-DB-5SL"/>
                         <outlet property="collectionView" destination="KIx-I3-kDT" id="y0Y-XV-Jap"/>
+                        <outlet property="newCollectionButtonOutlet" destination="soS-im-dFD" id="Gwz-Oh-sli"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wc0-t8-kmH" userLabel="First Responder" sceneMemberID="firstResponder"/>

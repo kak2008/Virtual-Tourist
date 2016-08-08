@@ -49,26 +49,29 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
     
     func longPressAction(myLongPress: UILongPressGestureRecognizer)
     {
-        // Get the location
-        let myCGPoint = myLongPress.locationInView(TLVCMapViewer)
-        let myMapPoint = TLVCMapViewer.convertPoint(myCGPoint, toCoordinateFromView: TLVCMapViewer)
-       // print(myMapPoint)
+        // Check state of Long Gesture
         
-        if editMode == true {
-            createAlertWithMessage("Edit Mode", Message: "Cannot create annotation in Edit Mode", actionTitle: "Ok", deleteAll: false)
-            return
+        if myLongPress.state == .Began
+        {
+            // Get the location
+            let myCGPoint = myLongPress.locationInView(TLVCMapViewer)
+            let myMapPoint = TLVCMapViewer.convertPoint(myCGPoint, toCoordinateFromView: TLVCMapViewer)
+            
+            if editMode == true {
+                createAlertWithMessage("Edit Mode", Message: "Cannot create annotation in Edit Mode", actionTitle: "Ok", deleteAll: false)
+                return
+            }
+            
+            // Create Annotation
+            let anno =  MKPointAnnotation()
+            anno.coordinate = myMapPoint
+            
+            TLVCMapViewer.addAnnotation(anno)
         }
-        
-        // Create Annotation
-        let anno =  MKPointAnnotation()
-        anno.coordinate = myMapPoint
-        
-        TLVCMapViewer.addAnnotation(anno)
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
-       // print("Annotation Pressed : \(view.annotation?.coordinate)")
         selectedAnnotation = view.annotation
         tappedLocationCoordinates = view.annotation?.coordinate
         if editMode == false

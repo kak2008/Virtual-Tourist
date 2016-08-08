@@ -7,21 +7,18 @@
 //
 
 import UIKit
+import MapKit
 
 class ApiClient: NSObject
 {
     
-    func getPhotos(failure: (errorMessage: String) -> Void, success: () -> Void)
+    func getPhotos(selectedAnnoCoordinates: CLLocationCoordinate2D, failure: (errorMessage: String) -> Void, success: () -> Void)
     {
-        // URL Request creation
-        
-        let url =  "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=78dbbb1a5b2b8703990a2ae27ad4807c&lat=38.889931&lon=-77.009003&per_page=10&page=1&format=json&nojsoncallback=1&auth_token=72157669072556973-2e7dba9faf0c1d55&api_sig=86254a0efd30388c3e7ac1db639cdccb"
-        
+        let url = "\(FlickrApiClient.Constants.BASE_URL)?method=flickr.photos.search&api_key=\(FlickrApiClient.Constants.APIKey)&sort=&lat=\(selectedAnnoCoordinates.latitude)&lon=\(selectedAnnoCoordinates.longitude)&per_page=20&page=1&format=json&nojsoncallback=1"
         
         let urlObj: NSURL = NSURL(string: url)!
         
         let request = NSURLRequest(URL: urlObj)
-        
         
         // URL Request session
         
@@ -31,10 +28,12 @@ class ApiClient: NSObject
         
         
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
+            
             // error handling
             if(error != nil)
             {
-                print(error)
+                // REVIEW: What happens in this case?
+               // print(error)
                 return
             }
      
@@ -52,13 +51,15 @@ class ApiClient: NSObject
                 obj.userPhotoDetailsArray = userPhotodetails as NSArray!
                 
 
-                print(obj.userPhotoDetailsArray)
+             //   print(obj.userPhotoDetailsArray)
                 success()
             }
                 
             catch
             {
-                print("Unable to parse the response data!");
+           //     print("Unable to parse the response data!");
+                
+                // REVIEW: What happens in this case?
             }
            
         }
@@ -69,27 +70,25 @@ class ApiClient: NSObject
     
     func getActualPhotoData(farmID: String!, serverID: String!, id: String!, secret: String!, result: (imageData: NSData) -> Void)
     {
-        // url request
+        //REVIEW: Instead of getting seperate parametes, get a dictionary and extract all values in this method
         
+        let urlString = "https://farm\(farmID).staticflickr.com/\(serverID)/\(id)_\(secret).jpg"
         
-        let url = "https://farm\(farmID).staticflickr.com/\(serverID)/\(id)_\(secret).jpg"
-        
-        let nsURL = NSURL(string: url)
-        
-        // url request
-        
-    //    let request = NSURLRequest(URL: nsURL!)
+        let url = NSURL(string: urlString)
         
         let conf = NSURLSessionConfiguration.defaultSessionConfiguration()
         
         let session = NSURLSession(configuration: conf)
         
-        let task = session.dataTaskWithURL(nsURL!) { (data, response, error) in
+        let task = session.dataTaskWithURL(url!) { (data, response, error) in
             if error != nil{
-                print("error \(error)")
+                
+                // REVIEW: Handle this case
+                
+          //      print("error \(error)")
                 return
             }
-         //   print("success")
+            
             result(imageData: data!)
         }
         task.resume()

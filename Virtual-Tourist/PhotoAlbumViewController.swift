@@ -14,8 +14,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     @IBOutlet weak var PAVCMapViewer: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var selectedAnnotationCoordinates: CLLocationCoordinate2D! = nil
+    @IBOutlet weak var newCollectionButtonOutlet: UIBarButtonItem!
     
+    var selectedAnnotationCoordinates: CLLocationCoordinate2D! = nil
     
     //  MARK:- View Life Cycle Methods
     
@@ -63,25 +64,24 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     
     func getPhotosCalling()
     {
+        newCollectionButtonOutlet.enabled = false
         
         let urlCalling = ApiClient()
-        urlCalling.getPhotos({ (errorMessage) in
-            // error handling
-            
-            print(errorMessage)
+        urlCalling.getPhotos(selectedAnnotationCoordinates, failure: { (errorMessage) in
+            // failure Case
             
             }) { 
-                // success case
-                
-               self.collectionView.reloadData()
+                // Success Case
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.collectionView.reloadData()
+                    self.newCollectionButtonOutlet.enabled = true
+                })
         }
-        
     }
     
     
     //  MARK:- Collection view cell methods
     
-
     // Number of section in collection view
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
@@ -90,15 +90,22 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     // Number of Items in section in collection view
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let userPhotosObj = UsersPhotosInfo.userPhotosSharedInstance
+        
         if userPhotosObj.userPhotoDetailsArray == nil
         {
             return 0
         }
+        else
+            if userPhotosObj.userPhotoDetailsArray.count == 0
+            {
+                showNoImagesLabel()
+            }
+
         return userPhotosObj.userPhotoDetailsArray.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath)
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! CollectionViewCell
         cell.backgroundColor = UIColor .whiteColor()
         
         let userPhotosObj = UsersPhotosInfo.userPhotosSharedInstance
@@ -109,21 +116,28 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         let id = photoDictionary["id"] as! String
         let secret = photoDictionary["secret"] as! String
         
+        let imageView = cell.viewWithTag(10) as! UIImageView
+        
         let apiClientObj = ApiClient()
         apiClientObj.getActualPhotoData("\(farmID)", serverID: serverID, id: "\(id)", secret: secret) { (imageData) in
+            // Activity indicator Animation
+            dispatch_async(dispatch_get_main_queue(), { 
+                cell.activityIndicatorAnimation(false)
+            })
+            
             // if result is nil
             if imageData != ""
             {
-                let imageView  = cell.viewWithTag(10) as! UIImageView
-               dispatch_async(dispatch_get_main_queue(), { 
-                imageView.image = UIImage(data: imageData)
+               dispatch_async(dispatch_get_main_queue(), {
+                    imageView.image = UIImage(data: imageData)
                })
             }
-            
+            else {
+                dispatch_async(dispatch_get_main_queue(), { 
+                    imageView.image = UIImage(named: "No-Image-Basic.png")
+                })
+            }
         }
-
-        let imageView = cell.viewWithTag(10) as! UIImageView
-        imageView.image = UIImage(named: "No-Image-Basic.png")
         
         cell.layer.borderColor = UIColor.grayColor().CGColor
         cell.layer.borderWidth = 1
@@ -131,10 +145,27 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         return cell
     }
 
+    func showNoImagesLabel()
+    {
+        let label = UILabel(frame: CGRectMake(0, 0, collectionView.frame.width, 21))
+        label.center = collectionView.center
+        label.textAlignment = NSTextAlignment.Center
+        label.text = "No images"
+        label.textColor = UIColor.whiteColor()
+        self.view.addSubview(label)
+    }
+    
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
         return CGSizeMake(((collectionView.bounds.size.width/3)-10), CGFloat((collectionView.bounds.size.width/3)-10))
     }
     
+    //  MARK:- New Collection Button Action methods
+    
+    @IBAction func newCollectionButtonPressed(sender: AnyObject)
+    {
+        getPhotosCalling()
+    }
+
     
 }
