@@ -37,7 +37,7 @@ class ApiClient: NSObject
             if(error != nil)
             {
                 // REVIEW: What happens in this case?
-               // print(error)
+              
                 return
             }
      
@@ -97,12 +97,5 @@ class ApiClient: NSObject
         }
         task.resume()
     }
-    
-    
-    
-    //flickr api key
-//    d977235eef395478a4e1c97eb9e749a4
-//    
-//    Secret:
-//    a98d5aa4d0c41701
+
 }

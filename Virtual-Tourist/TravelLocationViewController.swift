@@ -65,16 +65,15 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
                 return
             }
             
-            // Create Annotation
+            // Create Annotation Calling
             createAnnotation(myMapPoint)
           
             // Core Data Calling
             saveAnnotationCoordinates(myMapPoint)
-            
         }
     }
     
-    // Create Annotation
+    /** Create Annotation onto the Map Viewer */
     func createAnnotation(myMapPoint: CLLocationCoordinate2D)
     {
         // annotation creation
@@ -103,7 +102,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         }
     }
     
-    /** Delete All Annotations */
+    /** Deletes All Annotations from MapViewer and CoreData */
     func deleteAllAnnotations()
     {
         let allAnnotations = TLVCMapViewer.annotations
@@ -111,19 +110,20 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         deleteAllAnnotationsFromCoreData()
     }
     
-    // Delete Selected Annotation
+    /** Deletes Selected Annotation from MapViewer and CoreData */
     func deleteSelectedAnnotation()
     {
         TLVCMapViewer.removeAnnotation(selectedAnnotation)
-        deleteAnnotaions(selectedAnnotation.coordinate)
+        deleteSelectedAnnotaionFromCoreData(selectedAnnotation.coordinate)
     }
+
 
     
     // MARK: - Create Alert with Message and respective action
 
-    func createAlertWithMessage(Title: String, Message: String, actionTitle: String, deleteAll: Bool) -> Void {
-        // alert with Yes action
-        
+    /** Create alert with Message & delete action. */
+    func createAlertWithMessage(Title: String, Message: String, actionTitle: String, deleteAll: Bool)
+    {
         let alert = UIAlertController(title: Title, message: Message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
         alert.addAction(UIAlertAction(title: actionTitle, style: .Destructive, handler: { (ACTION:UIAlertAction!) in
@@ -137,14 +137,16 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
             }
         }))
         dispatch_async(dispatch_get_main_queue()) {
-                self.presentViewController(alert, animated: true, completion: nil)
+            self.presentViewController(alert, animated: true, completion: nil)
         }
     }
     
     
     // MARK: - Enable or Disable UI Elements
-
-    func enableAndDisableElements(doneValue: Bool, editValue:Bool, deleteValue: Bool) -> Void {
+    
+    /** Enable and Disable the UI Elements */
+    func enableAndDisableElements(doneValue: Bool, editValue:Bool, deleteValue: Bool)
+    {
         doneBarButtonItemOutlet.enabled = doneValue
         editBarButtonItemOutlet.enabled = editValue
         deleteBarButtonItemOutlet.enabled = deleteValue
@@ -178,14 +180,12 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
             let VC = segue.destinationViewController as! PhotoAlbumViewController
             VC.selectedAnnotationCoordinates = tappedLocationCoordinates
         }
-       
     }
     
 
     // MARK: - Core Data 
     
-    // Saving Annotation information
-
+    /** Saving Annotation information into Core Data */
     func saveAnnotationCoordinates(annotationCoordinates: CLLocationCoordinate2D)
     {
         
@@ -204,17 +204,16 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         
         do {
             try managedObj.save()
-            print("successfully saved an annotation")
         }
         catch let error as NSError {
-        // error handling...
-            print(error)
+            // error handling...
+            let errorMsg = error.localizedDescription
+            showAlertWithOkAction("Error", Message: errorMsg)
         }
     }
     
     
-    // Fetching Annotation information
-    
+    /** fetching Annotation information from Core Data */
     func fetchSavedAnnotations()
     {
         let appDelegateobj = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -236,20 +235,18 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
                 // Create annotations on map
                 createAnnotation(coord)
             }
-            
         }
         catch let error as NSError
         {
             // error handling...
-            print(error)
+            let errorMsg = error.localizedDescription
+            showAlertWithOkAction("Error", Message: errorMsg)
         }
-        
     }
     
     
-    // Delete Annotation from Core Data
-    
-    func deleteAnnotaions(deleteAnnoCoordinates: CLLocationCoordinate2D)
+    /** Delete Annotation from Core Data */
+    func deleteSelectedAnnotaionFromCoreData(deleteAnnoCoordinates: CLLocationCoordinate2D)
     {
         let appDelegateobj = UIApplication.sharedApplication().delegate as! AppDelegate
         
@@ -278,7 +275,8 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         catch let error as NSError
         {
             // error handling...
-            print(error)
+            let errorMsg = error.localizedDescription
+            showAlertWithOkAction("Error", Message: errorMsg)
         }
     }
 
@@ -301,12 +299,9 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         catch let error as NSError
         {
             // error handling...
-            print(error)
+            let errorMsg = error.localizedDescription
+            showAlertWithOkAction("Error", Message: errorMsg)
         }
     }
 }
-
-
-
-
 

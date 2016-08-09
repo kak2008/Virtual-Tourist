@@ -154,7 +154,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     
 
     //  MARK:- Show No Images Label
-
+    /** Shows No Image Label on the Collection View */
     func showNoImagesLabel()
     {
         let label = UILabel(frame: CGRectMake(0, 0, collectionView.frame.width, 21))
