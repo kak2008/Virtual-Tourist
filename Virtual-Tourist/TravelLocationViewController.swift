@@ -22,7 +22,6 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
   
     var editMode: Bool! = false
     var selectedAnnotation: MKAnnotation!
-    
    
     // MARK: - View Life Cycle Methods
     
@@ -36,6 +35,8 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         enableAndDisableElements(false, editValue: true, deleteValue: false)
         
         fetchSavedAnnotations()
+        
+        // selectedAnnotation =
     }
     
     
@@ -90,9 +91,13 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
     {
         selectedAnnotation = view.annotation
         tappedLocationCoordinates = view.annotation?.coordinate
+        
+        // [mapView deselectAnnotation:annotation animated:NO];
+        mapView.deselectAnnotation(view.annotation, animated: false)
+        
         if editMode == false
         {
-            performSegueWithIdentifier("MapViewToPhotoAlbumVCSegueID", sender: nil)
+            performSegueWithIdentifier("MapViewToPhotoAlbumVCSegueID", sender: self)
         }
         else
         {
