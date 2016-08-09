@@ -20,7 +20,6 @@
 		F8F5C8F01D5825DB00642A04 /* CoreDataStackModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F8F5C8EE1D5825DB00642A04 /* CoreDataStackModel.xcdatamodeld */; };
 		F8F91BB51D52AAF800F278AC /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F91BB41D52AAF800F278AC /* ApiClient.swift */; };
 		F8F91BBA1D52C8E400F278AC /* No-Image-Basic.png in Resources */ = {isa = PBXBuildFile; fileRef = F8F91BB91D52C8E400F278AC /* No-Image-Basic.png */; };
-		F8F91BBC1D53323200F278AC /* FlickrApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F91BBB1D53323200F278AC /* FlickrApiClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,7 +59,6 @@
 		F8F5C8EF1D5825DB00642A04 /* CoreDataStackModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataStackModel.xcdatamodel; sourceTree = "<group>"; };
 		F8F91BB41D52AAF800F278AC /* ApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
 		F8F91BB91D52C8E400F278AC /* No-Image-Basic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "No-Image-Basic.png"; sourceTree = "<group>"; };
-		F8F91BBB1D53323200F278AC /* FlickrApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrApiClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,7 +179,6 @@
 			children = (
 				F8F91BB41D52AAF800F278AC /* ApiClient.swift */,
 				F8F5C8E81D555F1800642A04 /* UsersPhotosInfo.swift */,
-				F8F91BBB1D53323200F278AC /* FlickrApiClient.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -335,7 +332,6 @@
 				F895D7831D3C64170059FFDB /* TravelLocationViewController.swift in Sources */,
 				F8F5C8ED1D578CA700642A04 /* CollectionViewCell.swift in Sources */,
 				F8F5C8E91D555F1800642A04 /* UsersPhotosInfo.swift in Sources */,
-				F8F91BBC1D53323200F278AC /* FlickrApiClient.swift in Sources */,
 				F8F91BB51D52AAF800F278AC /* ApiClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

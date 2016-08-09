@@ -11,10 +11,14 @@ import MapKit
 
 class ApiClient: NSObject
 {
+    struct Constants {
+        static let APIKey   = "d977235eef395478a4e1c97eb9e749a4"
+        static let BASE_URL = "https://api.flickr.com/services/rest/"
+    }
     
     func getPhotos(selectedAnnoCoordinates: CLLocationCoordinate2D, failure: (errorMessage: String) -> Void, success: () -> Void)
     {
-        let url = "\(FlickrApiClient.Constants.BASE_URL)?method=flickr.photos.search&api_key=\(FlickrApiClient.Constants.APIKey)&sort=&lat=\(selectedAnnoCoordinates.latitude)&lon=\(selectedAnnoCoordinates.longitude)&per_page=20&page=1&format=json&nojsoncallback=1"
+        let url = "\(Constants.BASE_URL)?method=flickr.photos.search&api_key=\(Constants.APIKey)&sort=&lat=\(selectedAnnoCoordinates.latitude)&lon=\(selectedAnnoCoordinates.longitude)&per_page=20&page=1&format=json&nojsoncallback=1"
         
         let urlObj: NSURL = NSURL(string: url)!
         

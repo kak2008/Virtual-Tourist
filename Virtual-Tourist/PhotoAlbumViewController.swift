@@ -18,6 +18,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     
     var selectedAnnotationCoordinates: CLLocationCoordinate2D! = nil
     
+    
     //  MARK:- View Life Cycle Methods
     
     override func viewDidLoad()
@@ -37,6 +38,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         collectionView.collectionViewLayout.invalidateLayout()
     }
     
+   
     //  MARK:- Zoom to Annotation region
     
     func zoomToRegion()
@@ -144,6 +146,15 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         return cell
     }
 
+
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        
+        return CGSizeMake(((collectionView.bounds.size.width/3)-10), CGFloat((collectionView.bounds.size.width/3)-10))
+    }
+    
+
+    //  MARK:- Show No Images Label
+
     func showNoImagesLabel()
     {
         let label = UILabel(frame: CGRectMake(0, 0, collectionView.frame.width, 21))
@@ -154,11 +165,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         self.view.addSubview(label)
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        
-        return CGSizeMake(((collectionView.bounds.size.width/3)-10), CGFloat((collectionView.bounds.size.width/3)-10))
-    }
-    
+   
     //  MARK:- New Collection Button Action methods
     
     @IBAction func newCollectionButtonPressed(sender: AnyObject)
@@ -166,5 +173,4 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         getPhotosCalling()
     }
 
-    
 }

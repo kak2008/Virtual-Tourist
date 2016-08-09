@@ -23,6 +23,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
     var editMode: Bool! = false
     var selectedAnnotation: MKAnnotation!
    
+    
     // MARK: - View Life Cycle Methods
     
     override func viewDidLoad()
@@ -35,8 +36,6 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         enableAndDisableElements(false, editValue: true, deleteValue: false)
         
         fetchSavedAnnotations()
-        
-        // selectedAnnotation =
     }
     
     
@@ -75,6 +74,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         }
     }
     
+    // Create Annotation
     func createAnnotation(myMapPoint: CLLocationCoordinate2D)
     {
         // annotation creation
@@ -83,9 +83,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         
         // Adding annotation to map
         TLVCMapViewer.addAnnotation(anno)
-        
     }
-
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
@@ -105,17 +103,19 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         }
     }
     
-    // Delete All Annotations
+    /** Delete All Annotations */
     func deleteAllAnnotations()
     {
         let allAnnotations = TLVCMapViewer.annotations
         TLVCMapViewer.removeAnnotations(allAnnotations)
+        deleteAllAnnotationsFromCoreData()
     }
     
     // Delete Selected Annotation
     func deleteSelectedAnnotation()
     {
         TLVCMapViewer.removeAnnotation(selectedAnnotation)
+        deleteAnnotaions(selectedAnnotation.coordinate)
     }
 
     
@@ -182,7 +182,9 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
     }
     
 
-    // MARK: - Core Data - Saving Annotation information
+    // MARK: - Core Data 
+    
+    // Saving Annotation information
 
     func saveAnnotationCoordinates(annotationCoordinates: CLLocationCoordinate2D)
     {
@@ -210,6 +212,8 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         }
     }
     
+    
+    // Fetching Annotation information
     
     func fetchSavedAnnotations()
     {
@@ -240,6 +244,65 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
             print(error)
         }
         
+    }
+    
+    
+    // Delete Annotation from Core Data
+    
+    func deleteAnnotaions(deleteAnnoCoordinates: CLLocationCoordinate2D)
+    {
+        let appDelegateobj = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedObj = appDelegateobj.managedObjectContext
+        
+        let fetchRequest = NSFetchRequest(entityName: "Annotations")
+        
+        do{
+            let fetchRequestResults = try managedObj.executeFetchRequest(fetchRequest) as! [NSManagedObject]
+            
+            for item in fetchRequestResults {
+                
+                let lat = item.valueForKey("latitude")! as! CLLocationDegrees
+                let long = item.valueForKey("longitude")! as! CLLocationDegrees
+                
+                // Compare coordinates
+                if (lat == deleteAnnoCoordinates.latitude && long == deleteAnnoCoordinates.longitude)
+                {
+                    // Delete annotation coordinate
+                    managedObj.deleteObject(item)
+                }
+            }
+            // Save data
+            try managedObj.save()
+        }
+        catch let error as NSError
+        {
+            // error handling...
+            print(error)
+        }
+    }
+
+    
+    /** Delete All annotations from Core Data */
+    func deleteAllAnnotationsFromCoreData()
+    {
+        let appDelegateobj = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedObj = appDelegateobj.managedObjectContext
+
+        let fetchRequest = NSFetchRequest(entityName: "Annotations")
+        
+        let deleteReq = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do{
+            try managedObj.executeRequest(deleteReq)
+            try managedObj.save()
+        }
+        catch let error as NSError
+        {
+            // error handling...
+            print(error)
+        }
     }
 }
 
