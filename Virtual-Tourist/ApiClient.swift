@@ -54,8 +54,6 @@ class ApiClient: NSObject
                 obj.userPhotosDic = userPhotosArray as NSDictionary!
                 obj.userPhotoDetailsArray = userPhotodetails as NSArray!
                 
-
-             //   print(obj.userPhotoDetailsArray)
                 success()
             }
                 

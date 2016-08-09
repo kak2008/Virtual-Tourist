@@ -199,9 +199,7 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         
         row.setValue(annotationCoordinates.latitude, forKey: "latitude")
         row.setValue(annotationCoordinates.longitude, forKey: "longitude")
-        
-        print((annotationCoordinates.latitude), (annotationCoordinates.longitude))
-        
+                
         do {
             try managedObj.save()
         }
