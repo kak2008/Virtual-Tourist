@@ -31,8 +31,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         collectionView.delegate = self
         
         getPhotosCalling()
- 
-    }
+     }
     
     override func viewWillLayoutSubviews() {
         collectionView.collectionViewLayout.invalidateLayout()

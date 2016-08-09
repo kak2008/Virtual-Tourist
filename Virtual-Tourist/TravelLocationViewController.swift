@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 class TravelLocationViewController: UIViewController, MKMapViewDelegate
 {
@@ -33,6 +34,8 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         longPressGesture()
         doneBarButtonItemOutlet.enabled = false
         enableAndDisableElements(false, editValue: true, deleteValue: false)
+        
+        fetchSavedAnnotations()
     }
     
     
@@ -63,12 +66,25 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
             }
             
             // Create Annotation
-            let anno =  MKPointAnnotation()
-            anno.coordinate = myMapPoint
+            createAnnotation(myMapPoint)
+          
+            // Core Data Calling
+            saveAnnotationCoordinates(myMapPoint)
             
-            TLVCMapViewer.addAnnotation(anno)
         }
     }
+    
+    func createAnnotation(myMapPoint: CLLocationCoordinate2D)
+    {
+        // annotation creation
+        let anno = MKPointAnnotation()
+        anno.coordinate = myMapPoint
+        
+        // Adding annotation to map
+        TLVCMapViewer.addAnnotation(anno)
+        
+    }
+
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
@@ -158,6 +174,67 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
             VC.selectedAnnotationCoordinates = tappedLocationCoordinates
         }
        
+    }
+    
+
+    // MARK: - Core Data - Saving Annotation information
+
+    func saveAnnotationCoordinates(annotationCoordinates: CLLocationCoordinate2D)
+    {
+        
+      let appDelegateobj = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedObj = appDelegateobj.managedObjectContext
+        
+        let entityObj = NSEntityDescription.entityForName("Annotations", inManagedObjectContext: managedObj)
+        
+        let row = NSManagedObject(entity: entityObj!, insertIntoManagedObjectContext: managedObj)
+        
+        row.setValue(annotationCoordinates.latitude, forKey: "latitude")
+        row.setValue(annotationCoordinates.longitude, forKey: "longitude")
+        
+        print((annotationCoordinates.latitude), (annotationCoordinates.longitude))
+        
+        do {
+            try managedObj.save()
+            print("successfully saved an annotation")
+        }
+        catch let error as NSError {
+        // error handling...
+            print(error)
+        }
+    }
+    
+    
+    func fetchSavedAnnotations()
+    {
+        let appDelegateobj = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedObj = appDelegateobj.managedObjectContext
+        
+        let fetchRequest = NSFetchRequest(entityName: "Annotations")
+        
+        do{
+            let fetchRequestResults = try managedObj.executeFetchRequest(fetchRequest) as! [NSManagedObject]
+        
+            for item in fetchRequestResults {
+                
+                let lat = item.valueForKey("latitude")! as! CLLocationDegrees
+                let long = item.valueForKey("longitude")! as! CLLocationDegrees
+                
+                let coord: CLLocationCoordinate2D = CLLocationCoordinate2D.init(latitude: lat, longitude: long)
+                
+                // Create annotations on map
+                createAnnotation(coord)
+            }
+            
+        }
+        catch let error as NSError
+        {
+            // error handling...
+            print(error)
+        }
+        
     }
 }
 
