@@ -56,7 +56,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     
    
     //  MARK:- Zoom to Annotation region
-    
+    /** zoom to the region selected on the map */
     func zoomToRegion()
     {
         let location = selectedAnnotationCoordinates
@@ -68,7 +68,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     
    
     //  MARK:- Enable/Disable UI Elements
-    /** Enables/Disables edit, Done, Delete Bar Buttons with respective bool value*/
+    /** Enables/Disables edit, Done, Delete Bar Buttons with respective bool value */
     func enableDisableBarButtons(editValue: Bool, doneValue: Bool, deleteValue: Bool)
     {
         editBarButtonOutlet.enabled = editValue
