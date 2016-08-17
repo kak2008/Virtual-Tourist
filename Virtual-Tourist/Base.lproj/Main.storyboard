@@ -64,7 +64,7 @@
             </objects>
             <point key="canvasLocation" x="265" y="309"/>
         </scene>
-        <!--Photo Album View Controller-->
+        <!--Title-->
         <scene sceneID="Hwf-4e-TOn">
             <objects>
                 <viewController id="3kJ-1O-YP0" customClass="PhotoAlbumViewController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
@@ -147,9 +147,39 @@
                             <constraint firstItem="ykM-P3-nje" firstAttribute="leading" secondItem="xfY-Th-8eM" secondAttribute="leading" id="lI8-bI-MLx"/>
                         </constraints>
                     </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Title" id="iec-xG-kJn">
+                        <leftBarButtonItems>
+                            <barButtonItem title="Back" style="done" id="a9X-oy-Gph">
+                                <connections>
+                                    <action selector="backBarButtonPressed:" destination="3kJ-1O-YP0" id="vWG-if-w9L"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem style="done" systemItem="done" id="0wP-Ha-2vQ">
+                                <connections>
+                                    <action selector="doneBarButtonPressed:" destination="3kJ-1O-YP0" id="PvJ-ue-2qc"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="edit" id="HBl-3n-Afa">
+                                <connections>
+                                    <action selector="editBarButtonPressed:" destination="3kJ-1O-YP0" id="BTn-3c-b9h"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="trash" id="1cJ-b1-epg">
+                                <connections>
+                                    <action selector="deleteBarButtonPressed:" destination="3kJ-1O-YP0" id="6fW-ww-msS"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
                     <connections>
                         <outlet property="PAVCMapViewer" destination="C8X-an-MYO" id="meh-DB-5SL"/>
                         <outlet property="collectionView" destination="KIx-I3-kDT" id="y0Y-XV-Jap"/>
+                        <outlet property="deleteBarButtonOutlet" destination="1cJ-b1-epg" id="je8-TZ-DIf"/>
+                        <outlet property="doneButtonOutlet" destination="0wP-Ha-2vQ" id="UuH-qn-7Ow"/>
+                        <outlet property="editBarButtonOutlet" destination="HBl-3n-Afa" id="Tqc-ft-zv3"/>
                         <outlet property="newCollectionButtonOutlet" destination="soS-im-dFD" id="Gwz-Oh-sli"/>
                     </connections>
                 </viewController>

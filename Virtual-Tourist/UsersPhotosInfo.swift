@@ -12,5 +12,5 @@ class UsersPhotosInfo: NSObject {
     static let userPhotosSharedInstance = UsersPhotosInfo()
 
     var userPhotosDic: NSDictionary!
-    var userPhotoDetailsArray: NSArray!
+    var userPhotoDetailsArray: NSMutableArray!
 }

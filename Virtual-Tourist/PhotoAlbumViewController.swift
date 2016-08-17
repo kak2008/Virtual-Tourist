@@ -16,7 +16,16 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     
     @IBOutlet weak var newCollectionButtonOutlet: UIBarButtonItem!
     
+    @IBOutlet weak var doneButtonOutlet: UIBarButtonItem!
+    @IBOutlet weak var editBarButtonOutlet: UIBarButtonItem!
+    @IBOutlet weak var deleteBarButtonOutlet: UIBarButtonItem!
+    
+    var editMode: Bool! = false
+    var noImagesLabel: UILabel!
     var selectedAnnotationCoordinates: CLLocationCoordinate2D! = nil
+    
+    var checkImageBox: UIImageView!
+    var selectedIndexPath: NSIndexPath!
     
     
     //  MARK:- View Life Cycle Methods
@@ -26,13 +35,20 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         super.viewDidLoad()
         self.title = "World Map"
 
-        zoomToRegion()
-       
         collectionView.dataSource = self
         collectionView.delegate = self
         
+        zoomToRegion()
         getPhotosCalling()
+        createImagesLabel()
+        enableDisableBarButtons(true, doneValue: false, deleteValue: false)
      }
+    
+    override func viewDidAppear(animated: Bool)
+    {
+        super.viewDidAppear(true)
+        noImagesLabel.center = collectionView.center
+    }
     
     override func viewWillLayoutSubviews() {
         collectionView.collectionViewLayout.invalidateLayout()
@@ -48,6 +64,42 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         
         PAVCMapViewer.setRegion(region, animated: true)
         createAnnotation(location)
+    }
+    
+   
+    //  MARK:- Enable/Disable UI Elements
+    /** Enables/Disables edit, Done, Delete Bar Buttons with respective bool value*/
+    func enableDisableBarButtons(editValue: Bool, doneValue: Bool, deleteValue: Bool)
+    {
+        editBarButtonOutlet.enabled = editValue
+        doneButtonOutlet.enabled = doneValue
+        deleteBarButtonOutlet.enabled = deleteValue
+    }
+    
+    
+    // MARK: - Create Alert with Message and respective action
+    
+    /** Create alert with Message & delete action. */
+    func createAlertWithMessage(Title: String, Message: String, actionTitle: String, deleteAll: Bool)
+    {
+        let alert = UIAlertController(title: Title, message: Message, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: actionTitle, style: .Destructive, handler: { (ACTION:UIAlertAction!) in
+            if(deleteAll == true)
+            {
+                UsersPhotosInfo.userPhotosSharedInstance.userPhotoDetailsArray.removeAllObjects()
+                self.collectionView.reloadData()
+            }
+            else
+            {
+                UsersPhotosInfo.userPhotosSharedInstance.userPhotoDetailsArray.removeObjectAtIndex(self.selectedIndexPath.row)
+                self.collectionView.deleteItemsAtIndexPaths([self.selectedIndexPath])
+                self.collectionView.reloadData()
+            }
+        }))
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
     }
     
 
@@ -92,15 +144,12 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let userPhotosObj = UsersPhotosInfo.userPhotosSharedInstance
         
+        noImagesLabel.hidden = (userPhotosObj.userPhotoDetailsArray != nil) && (userPhotosObj.userPhotoDetailsArray.count > 0)
+        
         if userPhotosObj.userPhotoDetailsArray == nil
         {
             return 0
         }
-        else
-            if userPhotosObj.userPhotoDetailsArray.count == 0
-            {
-                showNoImagesLabel()
-            }
 
         return userPhotosObj.userPhotoDetailsArray.count
     }
@@ -108,7 +157,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! CollectionViewCell
         cell.backgroundColor = UIColor .whiteColor()
-        
+    
         let userPhotosObj = UsersPhotosInfo.userPhotosSharedInstance
         let photoDictionary = (userPhotosObj.userPhotoDetailsArray[indexPath.row])
         
@@ -152,17 +201,25 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         return CGSizeMake(((collectionView.bounds.size.width/3)-10), CGFloat((collectionView.bounds.size.width/3)-10))
     }
     
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath)
+    {
+        selectedIndexPath = indexPath
+        if editMode == true
+        {
+            createAlertWithMessage("Delete", Message: "Do you want to delete this image...?", actionTitle: "Delete", deleteAll: false)
+        }
+    }
 
+    
     //  MARK:- Show No Images Label
     /** Shows No Image Label on the Collection View */
-    func showNoImagesLabel()
+    func createImagesLabel()
     {
-        let label = UILabel(frame: CGRectMake(0, 0, collectionView.frame.width, 21))
-        label.center = collectionView.center
-        label.textAlignment = NSTextAlignment.Center
-        label.text = "No images"
-        label.textColor = UIColor.whiteColor()
-        self.view.addSubview(label)
+        noImagesLabel = UILabel(frame: CGRectMake(0, 0, collectionView.frame.width, 21))
+        noImagesLabel.textAlignment = NSTextAlignment.Center
+        noImagesLabel.text = "No images"
+        noImagesLabel.textColor = UIColor.whiteColor()
+        self.view.addSubview(noImagesLabel)
     }
     
    
@@ -172,5 +229,24 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     {
         getPhotosCalling()
     }
+    
+    @IBAction func editBarButtonPressed(sender: AnyObject) {
+        enableDisableBarButtons(false, doneValue: true, deleteValue: true)
+        editMode = true
+    }
+    
+    @IBAction func deleteBarButtonPressed(sender: AnyObject) {
+        // delete All cells
+        createAlertWithMessage("Delete All", Message: "Are you sure, you wanna delete all cells...?", actionTitle: "Delete All", deleteAll: true)
+    }
+    
+    @IBAction func doneBarButtonPressed(sender: AnyObject) {
+        enableDisableBarButtons(true, doneValue: false, deleteValue: false)
+        editMode = false
+    }
 
+    @IBAction func backBarButtonPressed(sender: AnyObject) {
+     self.navigationController?.popViewControllerAnimated(true)
+    }
+  
 }

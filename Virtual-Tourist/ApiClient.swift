@@ -52,7 +52,7 @@ class ApiClient: NSObject
                 
                 let obj = UsersPhotosInfo.userPhotosSharedInstance
                 obj.userPhotosDic = userPhotosArray as NSDictionary!
-                obj.userPhotoDetailsArray = userPhotodetails as NSArray!
+                obj.userPhotoDetailsArray = NSMutableArray(array: userPhotodetails)
                 
                 success()
             }
