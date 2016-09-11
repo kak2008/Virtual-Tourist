@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout
 {
@@ -123,8 +124,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         urlCalling.getPhotos(selectedAnnotationCoordinates, failure: { (errorMessage) in
             // failure Case
             
-            }) { 
+            }) {
+                
                 // Success Case
+                self.saveImages()
                 dispatch_async(dispatch_get_main_queue(), {
                     self.collectionView.reloadData()
                     self.newCollectionButtonOutlet.enabled = true
@@ -248,5 +251,64 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     @IBAction func backBarButtonPressed(sender: AnyObject) {
      self.navigationController?.popViewControllerAnimated(true)
     }
-  
+    
+    // MARK: Core Data
+    
+    /** Save Images of selected Annotation from Core Data */
+    func saveImages()
+    {
+        let appDelegateobj = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedObj = appDelegateobj.managedObjectContext
+        
+        let fetchRequest = NSFetchRequest(entityName: "Annotations")
+        
+        do{
+            let fetchRequestResults = try managedObj.executeFetchRequest(fetchRequest) as! [NSManagedObject]
+            
+            for item in fetchRequestResults {
+                
+                let lat = item.valueForKey("latitude")! as! CLLocationDegrees
+                let long = item.valueForKey("longitude")! as! CLLocationDegrees
+                
+                // Compare coordinates
+                if (lat == selectedAnnotationCoordinates.latitude && long == selectedAnnotationCoordinates.longitude)
+                {
+                    // create photo object
+                    let photo = NSEntityDescription.entityForName("Photos", inManagedObjectContext: managedObj)
+                    
+                    // create row
+                    let photoRow = NSManagedObject(entity: photo!, insertIntoManagedObjectContext: managedObj)
+                    
+                    // Photos Array
+                    let userPhotosObj = UsersPhotosInfo.userPhotosSharedInstance
+                    
+                    for photoDictionary in userPhotosObj.userPhotoDetailsArray {
+                        let farmID = photoDictionary["farm"] as! NSNumber
+                        let serverID = photoDictionary["server"] as! String
+                        let id = photoDictionary["id"] as! String
+                        let secret = photoDictionary["secret"] as! String
+                        
+                        // get image url
+                        let urlApi = ApiClient()
+                        let urlString = urlApi.generateUrl("\(farmID)", serverID: serverID, id: id, secret: secret)
+                        let nsurl = NSURL(string: urlString)
+                        
+                        // Value initilization
+                        photoRow.setValue(NSData(contentsOfURL: nsurl!), forKey: "image")
+                        
+                        // add image to annotation
+                        let itemPhotos = item.mutableSetValueForKey("photos")
+                        itemPhotos.addObject(photoRow)
+                    }
+                }
+            }
+            // Save data
+            try managedObj.save()
+        }
+        catch let error as NSError
+        {
+            print(error)
+        }
+    }
 }

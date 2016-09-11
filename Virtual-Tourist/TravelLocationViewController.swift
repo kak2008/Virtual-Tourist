@@ -225,6 +225,8 @@ class TravelLocationViewController: UIViewController, MKMapViewDelegate
         
             for item in fetchRequestResults {
                 
+                print("object ID: ", item.objectID)
+                
                 let lat = item.valueForKey("latitude")! as! CLLocationDegrees
                 let long = item.valueForKey("longitude")! as! CLLocationDegrees
                 

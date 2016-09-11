@@ -70,11 +70,16 @@ class ApiClient: NSObject
     
     }
     
+    func generateUrl(farmID: String!, serverID: String!, id: String!, secret: String!) -> String {
+        let urlString = "https://farm\(farmID).staticflickr.com/\(serverID)/\(id)_\(secret).jpg"
+        return urlString
+    }
+    
     func getActualPhotoData(farmID: String!, serverID: String!, id: String!, secret: String!, result: (imageData: NSData) -> Void)
     {
         //REVIEW: Instead of getting seperate parametes, get a dictionary and extract all values in this method
         
-        let urlString = "https://farm\(farmID).staticflickr.com/\(serverID)/\(id)_\(secret).jpg"
+        let urlString = self.generateUrl(farmID, serverID: serverID, id: id, secret: secret)
         
         let url = NSURL(string: urlString)
         
