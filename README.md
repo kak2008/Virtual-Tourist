@@ -16,6 +16,10 @@ In order to run this app. Download the repository, open it on XCode, build & run
 ### Screenshots
 ![alt tag](https://github.com/kak2008/Virtual-Tourist/blob/master/Screenshots/virtual-Tourist%20screen%20shot.png)
 
+## Requirements
+* Xcode 7.3
+* Swift 2.0
+
 ## License
 Copyright (c) 2016 Anish Kodeboyina
 
