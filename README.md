@@ -9,5 +9,10 @@ persist both the pictures, and the association of the pictures with the pin.
 
 
 
-# Installation
+## Installation
 In order to run this app. Download the repository, open it on XCode, build & run.
+
+
+### Screenshots
+![alt tag](https://github.com/kak2008/Virtual-Tourist/blob/master/Screenshots/virtual-Tourist%20screen%20shot.png)
+
