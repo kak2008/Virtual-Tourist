@@ -8,7 +8,6 @@ Users will then be able to download pictures for the location.
 persist both the pictures, and the association of the pictures with the pin.
 
 
-
 ## Installation
 In order to run this app. Download the repository, open it on XCode, build & run.
 
@@ -18,9 +17,9 @@ In order to run this app. Download the repository, open it on XCode, build & run
 
 ## Implementation
 This app has two view controllers:
-* Travel Location View Controller: - This view controller shows the map and allows user to drop pins all over the world. Whenever user tap on dropped pin, photos are fetched from flickr at that particular location coordinates. User can delete pins in edit mode of this view controller.
+- __Travel Location View Controller__: - This view controller shows the map and allows user to drop pins all over the world. Whenever user tap on dropped pin, photos are fetched from flickr at that particular location coordinates. User can delete pins in edit mode of this view controller.
 
-* Photo Album View Controller: - This view controller 
+- Photo Album View Controller: - This view controller 
 
 
 
