@@ -16,6 +16,14 @@ In order to run this app. Download the repository, open it on XCode, build & run
 ### Screenshots
 ![alt tag](https://github.com/kak2008/Virtual-Tourist/blob/master/Screenshots/virtual-Tourist%20screen%20shot.png)
 
+## Implementation
+This app has two view controllers:
+* Travel Location View Controller: - This view controller shows the map and allows user to drop pins all over the world. Whenever user tap on dropped pin, photos are fetched from flickr at that particular location coordinates. User can delete pins in edit mode of this view controller.
+
+* Photo Album View Controller: - This view controller 
+
+
+
 ## Requirements
 * Xcode 7.3
 * Swift 2.0
