@@ -3,7 +3,7 @@ This app allows users specify travel locations around the world, and create virt
 
 Flickr API has been used in order to fetch photos at different locations across the globe. 
 
-This app allows user to drop pins on the map.
+This app allows user to drop pins on the map across the globe.
 Users will then be able to download pictures for the location.
 persist both the pictures, and the association of the pictures with the pin.
 
